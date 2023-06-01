@@ -28,39 +28,49 @@ OBJDIR = obj
 
 INCDIR = include
 
+MINILIB_DIR = minilibx_mms_20191025_beta
+
+MINILIB_INCDIR = $(patsubst %, $(LIBDIR)/%, $(MINILIB_DIR))
+
 LIB_INCDIR = $(LIBDIR)/$(INCDIR)
 
-_SRC = 
+_SRC = fract-ol_main.c
 SRC = $(patsubst %, $(SRCDIR)/%, $(_SRC))
 
 _OBJ = $(patsubst %.c, %.o, $(_SRC))
 OBJ = $(patsubst %, $(OBJDIR)/%, $(_OBJ))
 
-_SRC_BONUS = 
-SRC_BONUS = $(patsubst %, $(SRCDIR)/%, $(_SRC_BONUS))
+#_SRC_BONUS = 
+#SRC_BONUS = $(patsubst %, $(SRCDIR)/%, $(_SRC_BONUS))
 
-_OBJ_BONUS = $(patsubst %.c, %.o, $(_SRC_BONUS))
-OBJ_BONUS = $(patsubst %, $(OBJDIR)/%, $(_OBJ_BONUS))
+#_OBJ_BONUS = $(patsubst %.c, %.o, $(_SRC_BONUS))
+#OBJ_BONUS = $(patsubst %, $(OBJDIR)/%, $(_OBJ_BONUS))
 
 _LIB = libft.a
 LIB = $(patsubst %, $(LIBDIR)/%, $(_LIB))
 LIB_NAME = $(patsubst lib%.a, %, $(_LIB))
 
-_INC = 
+_INC = fract-ol.h
 INC = $(patsubst %, $(INCDIR)/%, $(_INC))
 
-_INC_BONUS = 
-INC_BONUS = $(patsubst %, $(INCDIR)/%, $(_INC_BONUS))
+#_INC_BONUS = 
+#INC_BONUS = $(patsubst %, $(INCDIR)/%, $(_INC_BONUS))
 
 _LIB_INC = libft.h
 LIB_INC = $(patsubst %, $(LIB_INCDIR)/%, $(_LIB_INC))
+
+_MINILIB_LIB_INC = mlx.h
+MINILIB_LIB_INC = $(patsubst %, $(MINILIB_INCDIR)/%, $(_MINILIB_LIB_INC))
+
+_MINILIBX = libmlx.dylib
+MINILIBX_NAME = $(patsubst lib%.dylib, %, $(_MINILIBX))
 
 .PHONY: all bonus test clean
 
 all: $(NAME)
 
-bonus: $(OBJ_BONUS) $(INC_BONUS) $(LIB)
-	$(CC) $(CFLAGS) $(OBJ_BONUS) -L$(LIBDIR) -l$(LIB_NAME) -o $(NAME_BONUS)
+#bonus: $(OBJ_BONUS) $(INC_BONUS) $(LIB)
+#	$(CC) $(CFLAGS) $(OBJ_BONUS) -L$(LIBDIR) -l$(LIB_NAME) -o $(NAME_BONUS)
 
 sanitizer: $(OBJ)
 	$(CC) $(CFLAGS) $(SFLAGS) $(OBJ) -L$(LIBDIR) -l$(LIB_NAME) -o $(NAME)
@@ -74,11 +84,15 @@ $(OBJDIR):
 $(LIB):
 	$(MAKE) -C $(LIBDIR)
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(INC) $(LIB_INC) | $(OBJDIR)
-	$(CC) $(CFLAGS) -c $< -I$(INCDIR) -I$(LIB_INCDIR) -o $@
+$(_MINILIBX):
+	$(MAKE) -C $(LIBDIR)/$(MINILIB_DIR)
+	cp $(LIBDIR)/$(MINILIB_DIR)/$(_MINILIBX) .
 
-$(NAME): $(OBJ) $(LIB)
-	$(CC) $(CFLAGS) $(OBJ) -L$(LIBDIR) -l$(LIB_NAME) -o $@
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(INC) $(LIB_INC) | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -I$(INCDIR) -I$(LIB_INCDIR) -I$(MINILIB_INCDIR) -o $@
+
+$(NAME): $(OBJ) $(LIB) $(_MINILIBX)
+	$(CC) $(CFLAGS) $(OBJ) -L$(LIBDIR) -l$(LIB_NAME) -l$(MINILIBX_NAME) -o $@
 
 clean:
 	rm -f $(OBJ)
