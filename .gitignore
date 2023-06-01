@@ -18,10 +18,10 @@
 !/lib/src
 !/lib/src/*.c
 !/lib/minilibx-linux
-!/lib/minilibx-linux/*
-#!/lib/minilibx-linux/*.c
-#!/lib/minilibx-linux/Makefile
-#!/lib/minilibx-linux/README.md
+!/lib/minilibx-linux/*.h
+!/lib/minilibx-linux/*.c
+!/lib/minilibx-linux/Makefile
+!/lib/minilibx-linux/README.md
 
 !/lib/minilibx_mms_20191025_beta
 
