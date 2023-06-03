@@ -12,25 +12,38 @@
 #include "fract-ol.h"
 #include "mlx.h"
 #include "libft.h"
+#include <stdio.h>
 
-typedef struct	s_data {
+typedef struct	s_img
+{
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;		// length in bits, I suppose
 	int		endian;
-}				t_data;
+} t_img;
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+typedef struct s_data
+{
+	void	*mlx_ptr;
+	void	*win_ptr;
+	t_img	img;
+	int		cur_img;
+} t_data;
+
+void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	if (img->endian)		// TODO figure this shit out
+		dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+	else
+		dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 
 }
 
-void	print_pixel_data(t_data *data)
+void	print_pixel_data(t_img *data)
 {
 	char	*address;
 	int		i;
@@ -44,25 +57,37 @@ void	print_pixel_data(t_data *data)
 	}
 }
 
+//int	render(t_data *data)
+int	render(t_data *data)
+{
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.img, 0, 0);
+
+	return (0);
+}
+
 int	main(void)
 {
-	void	*mlx;
-	void	*window;
-	t_data	img;
+	t_img	img;
+	t_data	data;
 
-	mlx = mlx_init();
-	window = mlx_new_window(mlx, 640, 480, "titteli");
-	img.img = mlx_new_image(mlx, 640, 480);
+	data.mlx_ptr = mlx_init();
+	data.win_ptr = mlx_new_window(data.mlx_ptr, 640, 480, "titteli");
+	img.img = mlx_new_image(data.mlx_ptr, 640, 480);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 								&img.endian);
+	data.img = img;
 	ft_printf("%d %d %d\n", img.bits_per_pixel, img.line_length, img.endian);
-	my_mlx_pixel_put(&img, 0, 0, 0xFFFFFF00);
-	my_mlx_pixel_put(&img, 0, 1, 0xFFFFFF00);
-	my_mlx_pixel_put(&img, 1, 0, 0xFFFFFF00);
-	my_mlx_pixel_put(&img, 1, 1, 0xFFFFFF00);
-	print_pixel_data(&img);
-	mlx_string_put(mlx, window, 320, 240, 0x0000FF00, "All your base are belong to us");
-	mlx_put_image_to_window(mlx, window, img.img, 0, 0);
-	mlx_loop(window);
+	my_mlx_pixel_put(&img, 20, 20, 0x000000FF);
+	getchar();
+	my_mlx_pixel_put(&img, 20, 21, 0x0000FF00);
+	my_mlx_pixel_put(&img, 21, 20, 0x00FF0000);
+	my_mlx_pixel_put(&img, 21, 21, 0x00FFFFFF);
+//	print_pixel_data(&img);
+	mlx_string_put(data.mlx_ptr, data.win_ptr, 320, 240, 0x0000FF00, "All your base are belong to us");
+//	mlx_put_image_to_window(mlx, window, img.img, 0, 0);
+	mlx_loop_hook(data.mlx_ptr, render, &data);
+
+	mlx_loop(data.win_ptr);
+	getchar();
 	return (0);
 }

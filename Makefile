@@ -28,7 +28,13 @@ OBJDIR = obj
 
 INCDIR = include
 
-MINILIB_DIR = minilibx_mms_20191025_beta
+OS := $(shell uname)
+
+ifeq "$(OS)" "Linux"
+MINILIB_DIR := minilibx-linux-master
+else
+MINILIB_DIR := minilibx_mms_20191025_beta
+endif
 
 MINILIB_INCDIR = $(patsubst %, $(LIBDIR)/%, $(MINILIB_DIR))
 
@@ -62,8 +68,15 @@ LIB_INC = $(patsubst %, $(LIB_INCDIR)/%, $(_LIB_INC))
 _MINILIB_LIB_INC = mlx.h
 MINILIB_LIB_INC = $(patsubst %, $(MINILIB_INCDIR)/%, $(_MINILIB_LIB_INC))
 
+ifeq "$(OS)" "Linux"
+_MINILIBX = libmlx.a
+MINILIBX_NAME = $(patsubst lib%.a, %, $(_MINILIBX))
+MINILIBX = $(patsubst %, $(LIBDIR)/$(MINILIB_DIR)/%, $(_MINILIBX))
+else
 _MINILIBX = libmlx.dylib
 MINILIBX_NAME = $(patsubst lib%.dylib, %, $(_MINILIBX))
+endif
+
 
 .PHONY: all bonus test clean
 
@@ -84,15 +97,30 @@ $(OBJDIR):
 $(LIB):
 	$(MAKE) -C $(LIBDIR)
 
+ifeq "$(OS)" "Linux"
+$(MINILIBX): 
+	$(MAKE) -C $(LIBDIR)/$(MINILIB_DIR)
+else
 $(_MINILIBX):
 	$(MAKE) -C $(LIBDIR)/$(MINILIB_DIR)
 	cp $(LIBDIR)/$(MINILIB_DIR)/$(_MINILIBX) .
+endif
 
+ifeq "$(OS)" "Linux"
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(INC) $(LIB_INC) | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -I$(INCDIR) -I$(LIB_INCDIR) -I/usr/include -I$(MINILIB_INCDIR) -o $@
+else
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INC) $(LIB_INC) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -I$(INCDIR) -I$(LIB_INCDIR) -I$(MINILIB_INCDIR) -o $@
+endif
 
+ifeq "$(OS)" "Linux"
+$(NAME): $(OBJ) $(LIB) $(MINILIBX)
+	$(CC) $(CFLAGS) $(OBJ) -L$(LIBDIR) -l$(LIB_NAME) -L/usr/lib -L$(LIBDIR)/$(MINILIB_DIR) -l$(MINILIBX_NAME) -lXext -lX11 -lm -o $@
+else
 $(NAME): $(OBJ) $(LIB) $(_MINILIBX)
-	$(CC) $(CFLAGS) $(OBJ) -L$(LIBDIR) -l$(LIB_NAME) -l$(MINILIBX_NAME) -o $@
+	$(CC) $(CFLAGS) $(OBJ) -L$(LIBDIR) -l$(LIB_NAME) -l$(MINILIBX_NAME) -lm -o $@
+endif
 
 clean:
 	rm -f $(OBJ)
