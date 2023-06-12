@@ -32,13 +32,13 @@ OS := $(shell uname)
 
 ifeq "$(OS)" "Linux"
 MINILIB_DIR := minilibx-linux
-else
+else ifeq "$(OS)" "Darwin"
 MINILIB_DIR := minilibx_mms_20191025_beta
 endif
 
 ifeq "$(OS)" "Linux"
 MINILIB_SRC := minilibx-linux.tgz
-else
+else ifeq "$(OS)" "Darwin"
 MINILIB_SRC := minilibx_mms_beta.tgz
 endif
 
@@ -78,7 +78,7 @@ ifeq "$(OS)" "Linux"
 _MINILIBX = libmlx.a
 MINILIBX_NAME = $(patsubst lib%.a, %, $(_MINILIBX))
 MINILIBX = $(patsubst %, $(LIB_DIR)/$(MINILIB_DIR)/%, $(_MINILIBX))
-else
+else ifeq "$(OS)" "Darwin"
 _MINILIBX = libmlx.dylib
 MINILIBX_NAME = $(patsubst lib%.dylib, %, $(_MINILIBX))
 endif
@@ -111,7 +111,7 @@ $(MINILIB_DIR):
 ifeq "$(OS)" "Linux"
 $(MINILIBX): $(MINILIB_DIR)
 	$(MAKE) -C $(LIB_DIR)/$(MINILIB_DIR)
-else
+else ifeq "$(OS)" "Darwin"
 $(_MINILIBX): $(MINILIB_DIR)
 	$(MAKE) -C $(LIB_DIR)/$(MINILIB_DIR)
 	cp $(LIB_DIR)/$(MINILIB_DIR)/$(_MINILIBX) .
@@ -121,7 +121,7 @@ endif
 ifeq "$(OS)" "Linux"
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INC) $(LIB_INC) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -I$(INCDIR) -I$(LIB_INCDIR) -I/usr/include -I$(MINILIB_INCDIR) -o $@
-else
+else ifeq "$(OS)" "Darwin"
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INC) $(LIB_INC) | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -I$(INCDIR) -I$(LIB_INCDIR) -I$(MINILIB_INCDIR) -o $@
 endif
@@ -130,7 +130,7 @@ endif
 ifeq "$(OS)" "Linux"
 $(NAME): $(OBJ) $(LIB) $(MINILIBX)
 	$(CC) $(CFLAGS) $(OBJ) -L$(LIB_DIR) -l$(LIB_NAME) -L/usr/lib -L$(LIB_DIR)/$(MINILIB_DIR) -l$(MINILIBX_NAME) -lXext -lX11 -lm -o $@
-else
+else ifeq "$(OS)" "Darwin"
 $(NAME): $(OBJ) $(LIB) $(_MINILIBX)
 	$(CC) $(CFLAGS) $(OBJ) -L$(LIB_DIR) -l$(LIB_NAME) -l$(MINILIBX_NAME) -lm -o $@
 endif

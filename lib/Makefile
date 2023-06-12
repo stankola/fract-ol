@@ -50,6 +50,7 @@ $(NAME): $(OBJ)
 
 clean:
 	rm -f $(OBJ)
+	rmdir $(OBJDIR) 2> /dev/null || true
 
 fclean: clean
 	rm -f $(NAME)
