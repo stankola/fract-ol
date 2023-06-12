@@ -1,15 +1,10 @@
+//TODO: Header
+
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
 #include "libft.h"
 #include "fract-ol.h"
-
-int	my_round(double d)
-{
-	if (d - floor(d) > 0.5)
-		return ((int)ceil(d));
-	return ((int)floor(d));
-}
 
 // Might need to reconsider this. If origin is in the center of the screen,
 // negative values should be permitted.

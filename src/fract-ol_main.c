@@ -34,7 +34,14 @@ int	main(void)
 	t_data	data;
 
 	data.mlx_ptr = mlx_init();
+	if (data.mlx_ptr == NULL)
+		return (-1);
 	data.win_ptr = mlx_new_window(data.mlx_ptr, SCREEN_WIDTH, SCREEN_HEIGHT, TITLE);
+	if (data.win_ptr == NULL)
+	{
+		free(data.mlx_ptr);
+		return (-1);
+	}
 	data.img.img = mlx_new_image(data.mlx_ptr, SCREEN_WIDTH, SCREEN_HEIGHT);
 	data.img.addr = mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_length,
 								&data.img.endian);

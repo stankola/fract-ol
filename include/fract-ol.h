@@ -38,8 +38,6 @@ typedef struct s_point
 	int	y;
 } t_point;
 
-int	my_round(double d);
-
 int	check_bounds(t_point p);
 
 int	invert_int_by_bytes(int i, unsigned int byteamount);

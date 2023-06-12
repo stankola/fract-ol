@@ -1,3 +1,5 @@
+//TODO: Header
+
 #include "fract-ol.h"
 
 // endian: 0 == Little-endian, 1 == Big-endian

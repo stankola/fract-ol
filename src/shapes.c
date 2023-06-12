@@ -1,3 +1,5 @@
+//TODO: Header
+
 #include "fract-ol.h"
 #include <math.h>
 
@@ -9,10 +11,10 @@ int render_circle(t_img *img, t_point p, int radius, int color)
 	double	r;
 
 	r = radius * radius;
-	x = -my_round(r);
-	while (x <= my_round(r))
+	x = -round(r);
+	while (x <= r)
 	{
-		y = my_round(sqrt(r - x * x));
+		y = round(sqrt(r - x * x));
 		draw_pixel(img, (t_point){p.x + x, p.y + y}, color);
 		draw_pixel(img, (t_point){p.x + x, p.y - y}, color);
 		x++;
