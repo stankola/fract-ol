@@ -46,7 +46,7 @@ MINILIB_INCDIR = $(patsubst %, $(LIB_DIR)/%, $(MINILIB_DIR))
 
 LIB_INCDIR = $(LIB_DIR)/$(INCDIR)
 
-_SRC = fract-ol_main.c
+_SRC = fract-ol_main.c fract-ol_helpers.c
 SRC = $(patsubst %, $(SRCDIR)/%, $(_SRC))
 
 _OBJ = $(patsubst %.c, %.o, $(_SRC))
