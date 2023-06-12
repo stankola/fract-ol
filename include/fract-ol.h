@@ -59,8 +59,8 @@ typedef struct s_point
 
 typedef struct s_cval
 {
-	double	re;
-	double	im;
+	double	r;
+	double	i;
 } t_cval;
 
 int		check_bounds(t_point p);
