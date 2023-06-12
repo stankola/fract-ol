@@ -57,6 +57,12 @@ typedef struct s_point
 	int	y;
 } t_point;
 
+typedef struct s_cval
+{
+	double	re;
+	double	im;
+} t_cval;
+
 int		check_bounds(t_point p);
 
 int		invert_int_by_bytes(int i, unsigned int byteamount);
