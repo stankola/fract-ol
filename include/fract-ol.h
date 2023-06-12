@@ -44,4 +44,14 @@ int	check_bounds(t_point p);
 
 int	invert_int_by_bytes(int i, unsigned int byteamount);
 
+void	draw_pixel(t_img *img, t_point p, int color);
+
+void	render_background(t_img *img, int color);
+
+/* These are not required for fract-ol */
+
+int render_circle(t_img *img, t_point p, int radius, int color);
+
+int render_square(t_img *img, t_point p, int size, int color);
+
 #endif
