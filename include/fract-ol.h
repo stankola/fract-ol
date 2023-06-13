@@ -22,6 +22,7 @@
 # define ZOOM_FACTOR 0.8	// ZOOM_FACTOR should be between ]0, 1[
 # define SHIFT_MULTIPLIER 0.1
 # define MANDELBROT_ITERATIONS 200
+# define JULIA_ITERATIONS 50
 # ifdef __linux__
 #  define ESC 65307
 #  define R 114
@@ -112,11 +113,11 @@ void	render_background(t_img *img, int color);
 
 void	get_mandelbrot_dimensions(t_dim *dim);
 
-void	render_mandelbrot(t_img *img, t_dim dim, unsigned int MaxIterations);
+void	render_mandelbrot(t_img *img, t_dim dim, int max_iterations);
 
 void	get_julia_dimensions(t_dim *dim);
 
-void	render_julia(t_img *img, t_dim dim, unsigned int max_iterations);
+void	render_julia(t_img *img, t_dim dim, int max_iterations);
 
 void	render_fractal(t_data *data);
 

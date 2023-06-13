@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdlib.h>
+#include <math.h>
 #include "fract-ol.h"
 
 void	get_mandelbrot_dimensions(t_dim *dim)
@@ -21,11 +22,22 @@ void	get_mandelbrot_dimensions(t_dim *dim)
 		(dim->maxRe - dim->minRe) * SCREEN_HEIGHT / SCREEN_WIDTH;
 }
 
+static int	get_outside_color(int iterations, int max_iterations)
+{
+	return (((int)round((double)iterations / (double)max_iterations * 255)) << 8);
+}
+
+static int	get_inside_color(void)
+{
+	return (BLACK);
+}
+
 // from http://warp.povusers.org/Mandelbrot/
-void	render_mandelbrot(t_img *img, t_dim dim, unsigned int max_iterations)
+void	render_mandelbrot(t_img *img, t_dim dim, int max_iterations)
 {
 	long double Re_factor = (dim.maxRe - dim.minRe) / (SCREEN_WIDTH - 1);
 	long double Im_factor = (dim.maxIm - dim.minIm) / (SCREEN_HEIGHT - 1);
+	int	n;
 
 	for (unsigned y=0; y<SCREEN_HEIGHT; ++y)
 	{
@@ -37,21 +49,22 @@ void	render_mandelbrot(t_img *img, t_dim dim, unsigned int max_iterations)
 			long double Z_im = c_im;
 			long double Z_re = c_re;
 			int isInside = 1;
-			for (unsigned n = 0; n < max_iterations; ++n)
+			n = -1;
+			while (++n < max_iterations)
 			{
 				long double Z_re2 = Z_re * Z_re;
 				long double Z_im2 = Z_im * Z_im;
 				if (Z_re2 + Z_im2 > 4)
 				{
 					isInside = 0;
-					draw_pixel(img, (t_point){x, y}, (5 * (n + 1)) << 8);
+					draw_pixel(img, (t_point){x, y}, get_outside_color(n, max_iterations));
 					break;
 				}
 				Z_im = 2 * Z_re * Z_im + c_im;
 				Z_re = Z_re2 - Z_im2 + c_re;
 			}
 			if (isInside)
-				draw_pixel(img, (t_point){x, y}, BLACK);
+				draw_pixel(img, (t_point){x, y}, get_inside_color());
 		}
 	}
 }

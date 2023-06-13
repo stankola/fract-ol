@@ -24,7 +24,7 @@ void	render_fractal(t_data *data)
 	{
 		if (data->initialize)
 			get_julia_dimensions(&(data->dim));
-		render_julia(&(data->img), data->dim, MANDELBROT_ITERATIONS);
+		render_julia(&(data->img), data->dim, JULIA_ITERATIONS);
 	}
 	data->initialize = 0;
 }
