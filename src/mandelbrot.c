@@ -9,47 +9,49 @@
 /*   Updated: 2023/06/12 20:52:38 by tsankola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include <stdlib.h>
 #include "fract-ol.h"
 
-//void	iterate(t_point p, double Z_re, double Z_im)
+void	get_mandelbrot_dimensions(t_dim *dim)
+{
+	dim->minRe = -2.0;
+	dim->maxRe = 1.0;
+	dim->minIm = -1.2;
+	dim->maxIm = dim->minIm +
+		(dim->maxRe - dim->minRe) * SCREEN_HEIGHT / SCREEN_WIDTH;
+}
 
 // from http://warp.povusers.org/Mandelbrot/
-void	render_mandelbrot(t_img *img, unsigned int MaxIterations)
+void	render_mandelbrot(t_img *img, t_dim dim, unsigned int max_iterations)
 {
-	double MinRe = -2.0;
-	double MaxRe = 1.0;
-	double MinIm = -1.2;
-	double MaxIm = MinIm + (MaxRe - MinRe) * SCREEN_HEIGHT / SCREEN_WIDTH;
-	double Re_factor = (MaxRe - MinRe) / (SCREEN_WIDTH - 1);
-	double Im_factor = (MaxIm - MinIm) / (SCREEN_HEIGHT - 1);
+	long double Re_factor = (dim.maxRe - dim.minRe) / (SCREEN_WIDTH - 1);
+	long double Im_factor = (dim.maxIm - dim.minIm) / (SCREEN_HEIGHT - 1);
 
-	for(unsigned y=0; y<SCREEN_HEIGHT; ++y)
+	for (unsigned y=0; y<SCREEN_HEIGHT; ++y)
 	{
-		double c_im = MaxIm - y * Im_factor;
-		for(unsigned x = 0; x < SCREEN_WIDTH; ++x)
+		long double c_im = dim.maxIm - y * Im_factor;
+		for (unsigned x = 0; x < SCREEN_WIDTH; ++x)
 		{
-			double c_re = MinRe + x * Re_factor;
+			long double c_re = dim.minRe + x * Re_factor;
 
-			double Z_re = c_re;
-			double Z_im = c_im;
+			long double Z_im = c_im;
+			long double Z_re = c_re;
 			int isInside = 1;
-			for(unsigned n = 0; n < MaxIterations; ++n)
+			for (unsigned n = 0; n < max_iterations; ++n)
 			{
-				double Z_re2 = Z_re * Z_re;
-				double Z_im2 = Z_im * Z_im;
-				if(Z_re2 + Z_im2 > 4)
+				long double Z_re2 = Z_re * Z_re;
+				long double Z_im2 = Z_im * Z_im;
+				if (Z_re2 + Z_im2 > 4)
 				{
 					isInside = 0;
-					draw_pixel(img, (t_point){x, y}, (n * 5) << 16);
+					draw_pixel(img, (t_point){x, y}, (5 * (n + 1)) << 8);
 					break;
 				}
 				Z_im = 2 * Z_re * Z_im + c_im;
 				Z_re = Z_re2 - Z_im2 + c_re;
 			}
-			if(isInside)
-			{
+			if (isInside)
 				draw_pixel(img, (t_point){x, y}, BLACK);
-			}
 		}
 	}
 }

@@ -12,6 +12,23 @@
 #include "fract-ol.h"
 #include <math.h>
 
+void	render_fractal(t_data *data)
+{
+	if (data->fractal == MANDELBROT)
+	{
+		if (data->initialize)
+			get_mandelbrot_dimensions(&(data->dim));
+		render_mandelbrot(&(data->img), data->dim, MANDELBROT_ITERATIONS);
+	}
+	else if (data->fractal == JULIA)
+	{
+		if (data->initialize)
+			get_julia_dimensions(&(data->dim));
+		render_julia(&(data->img), data->dim, MANDELBROT_ITERATIONS);
+	}
+	data->initialize = 0;
+}
+
 // Draws a circle centered at x,y with radius
 int render_circle(t_img *img, t_point p, int radius, int color)
 {

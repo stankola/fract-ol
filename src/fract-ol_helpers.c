@@ -15,6 +15,57 @@
 #include "libft.h"
 #include "fract-ol.h"
 
+// Factor should be between ]0,1[
+// Procedure before compressing it for the Norm (for clarity):
+//	double x_offset = (double)center.x / (double)SCREEN_WIDTH;
+//	double x_width = dim->maxRe - dim->minRe;
+//	double x_coordinate = x_width * x_offset + dim->minRe;
+//	double new_x_width = x_width * factor;
+//	double new_minRe = x_coordinate - new_x_width * x_offset;
+//	double new_maxRe = new_minRe + new_x_width;
+void	zoom(t_dim *dim, t_point center, long double factor)
+{
+	double	width;
+	double	new_width;
+	double	height;
+	double	new_height;
+
+	width = dim->maxRe - dim->minRe;
+	new_width = width * factor;
+	dim->minRe = (width - new_width) *
+		(double)center.x / (double)SCREEN_WIDTH + dim->minRe;
+	dim->maxRe = dim->minRe + new_width;
+
+	height = dim->maxIm - dim->minIm;
+	new_height = height * factor;
+	dim->minIm = (height - new_height) *
+		(1 - (double)center.y / (double)SCREEN_HEIGHT) + dim->minIm;
+	dim->maxIm = dim->minIm + new_height;
+}
+
+void	shift(t_dim *dim, int direction, double distance_multiplier)
+{
+	double	length;
+
+	if (direction == DOWN_ARROW)
+		distance_multiplier *= -1;
+	if (direction == UP_ARROW || direction == DOWN_ARROW)
+	{
+		length = dim->maxIm - dim->minIm;
+		dim->maxIm += length * distance_multiplier;
+		dim->minIm += length * distance_multiplier;;
+		return ;
+	}
+	if (direction == LEFT_ARROW)
+		distance_multiplier *= -1;
+	if (direction == RIGHT_ARROW || direction == LEFT_ARROW)
+	{
+		length = dim->maxRe - dim->minRe;
+		dim->maxRe += length * distance_multiplier;
+		dim->minRe += length * distance_multiplier;
+	}
+}
+
 // Might need to reconsider this. If origin is in the center of the screen,
 // negative values should be permitted.
 int	check_bounds(t_point p)
