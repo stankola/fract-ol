@@ -13,7 +13,10 @@ void	get_julia_dimensions(t_dim *dim)
 
 static int	get_outside_color(int iterations, int max_iterations)
 {
-	return (((int)round((double)iterations / (double)max_iterations * 255)) << 8);
+	int	color;
+
+	color = (int)round((double)iterations / (double)max_iterations * 255);
+	return (color);
 }
 
 static int	get_inside_color(void)
