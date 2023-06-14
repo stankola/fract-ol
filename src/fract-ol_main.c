@@ -71,7 +71,7 @@ int	parse(int argc, char *argv[])
 	char	*s;
 	int		i;
 
-	if (argc >= 2 && argc <= 4)
+	if (argc == 2 || argc == 4)
 	{
 		i = ft_atoi(argv[1]);
 		s = ft_itoa(i);
@@ -80,7 +80,7 @@ int	parse(int argc, char *argv[])
 			if (ft_strncmp(s, argv[1], ft_strlen(argv[1])) != 0)
 				i = -1;
 			free(s);
-			if (i == MANDELBROT || i == JULIA)
+			if (i == MANDELBROT || (i == JULIA && argc == 4))
 				return (i);
 		}
 	}

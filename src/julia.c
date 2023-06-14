@@ -6,8 +6,8 @@
 void	get_julia_dimensions(t_dim *dim)
 {
 	dim->minRe = -2.0;
-	dim->maxRe = 1.0;
-	dim->minIm = -1.2;
+	dim->maxRe = 2.0;
+	dim->minIm = -2;
 	dim->maxIm = dim->minIm +
 		(dim->maxRe - dim->minRe) * SCREEN_HEIGHT / SCREEN_WIDTH;
 }
@@ -22,7 +22,7 @@ static int	get_outside_color(int iterations, int max_iterations)
 
 static int	get_inside_color(void)
 {
-	return (BLACK);
+	return (WHITE);
 }
 
 // adapted from http://warp.povusers.org/Mandelbrot/
@@ -30,8 +30,6 @@ void	render_julia(t_img *img, t_dim dim, t_cval k, int max_iterations)
 {
 	long double Re_factor = (dim.maxRe - dim.minRe) / (SCREEN_WIDTH - 1);
 	long double Im_factor = (dim.maxIm - dim.minIm) / (SCREEN_HEIGHT - 1);
-	long double k_im = k.i;
-	long double k_re = k.r;
 	int	n;
 
 	printf("rendering julia for K: Re %Lf Im %Lf\n", k.r, k.i);	// stdio
@@ -56,8 +54,8 @@ void	render_julia(t_img *img, t_dim dim, t_cval k, int max_iterations)
 					draw_pixel(img, (t_point){x, y}, get_outside_color(n, max_iterations));
 					break;
 				}
-				Z_im = 2 * Z_re * Z_im + k_im;
-				Z_re = Z_re2 - Z_im2 + k_re;
+				Z_im = 2 * Z_re * Z_im + k.i;
+				Z_re = Z_re2 - Z_im2 + k.r;
 			}
 			if (isInside)
 				draw_pixel(img, (t_point){x, y}, get_inside_color());

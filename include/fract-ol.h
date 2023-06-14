@@ -21,8 +21,8 @@
 # define WHITE 0x00FFFFFF
 # define ZOOM_FACTOR 0.8	// ZOOM_FACTOR should be between ]0, 1[
 # define SHIFT_MULTIPLIER 0.1
-# define MANDELBROT_ITERATIONS 200
-# define JULIA_ITERATIONS 250
+# define MANDELBROT_ITERATIONS 50
+# define JULIA_ITERATIONS 500
 # ifdef __linux__
 #  define ESC 65307
 #  define R 114
