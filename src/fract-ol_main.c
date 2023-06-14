@@ -38,16 +38,12 @@ int	key_hook(int keycode, t_data *data)
 		destroy(data);
 	else if (keycode == R)
 	{
-		mlx_destroy_image(data->mlx_ptr, data->img.img);
-		data->img.img = mlx_new_image(data->mlx_ptr, SCREEN_WIDTH, SCREEN_HEIGHT);
 		data->initialize = 1;
 		render_fractal(data);
 	}
 	else if (keycode == LEFT_ARROW || keycode == UP_ARROW || keycode == DOWN_ARROW || keycode == RIGHT_ARROW)
 	{
 		shift(&(data->dim), keycode, SHIFT_MULTIPLIER);
-		mlx_destroy_image(data->mlx_ptr, data->img.img);
-		data->img.img = mlx_new_image(data->mlx_ptr, SCREEN_WIDTH, SCREEN_HEIGHT);
 		render_fractal(data);
 	}
 	return (0);
@@ -57,6 +53,8 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 {
 	data +=0;
 	ft_printf("Mouse button %d in x %d y %d\n", button, x, y);
+	printf("Coordinates Re %Lf Im %Lf\n", (data->dim.maxRe - data->dim.minRe) * (double)x / (double)SCREEN_WIDTH + data->dim.minRe,
+										(data->dim.maxIm - data->dim.minIm) * (double)y / (double)SCREEN_HEIGHT + data->dim.minIm);
 	if (button == SCROLL_UP)
 		zoom(&(data->dim), (t_point){x, y}, ZOOM_FACTOR);
 	else if (button == SCROLL_DOWN)
@@ -64,8 +62,6 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 	else
 		return (0);
 	printf("New dimensions minRe %Lf maxRe %Lf minIm %Lf maxIm %Lf\n", data->dim.minRe, data->dim.maxRe, data->dim.minIm, data->dim.maxIm);
-	mlx_destroy_image(data->mlx_ptr, data->img.img);
-	data->img.img = mlx_new_image(data->mlx_ptr, SCREEN_WIDTH, SCREEN_HEIGHT);
 	render_fractal(data);
 	return (0);
 }
