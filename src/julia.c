@@ -24,13 +24,13 @@ static int	get_inside_color(void)
 	return (BLACK);
 }
 
-// from http://warp.povusers.org/Mandelbrot/
-void	render_julia(t_img *img, t_dim dim, int max_iterations)
+// adapted from http://warp.povusers.org/Mandelbrot/
+void	render_julia(t_img *img, t_dim dim, t_cval k, int max_iterations)
 {
 	long double Re_factor = (dim.maxRe - dim.minRe) / (SCREEN_WIDTH - 1);
 	long double Im_factor = (dim.maxIm - dim.minIm) / (SCREEN_HEIGHT - 1);
-	long double k_im = 0.288;
-	long double k_re = 0.353;
+	long double k_im = k.i;
+	long double k_re = k.r;
 	int	n;
 
 	for (unsigned y=0; y<SCREEN_HEIGHT; ++y)

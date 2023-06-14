@@ -55,9 +55,9 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 	ft_printf("Mouse button %d in x %d y %d\n", button, x, y);
 	printf("Coordinates Re %Lf Im %Lf\n", (data->dim.maxRe - data->dim.minRe) * (double)x / (double)SCREEN_WIDTH + data->dim.minRe,
 										(data->dim.maxIm - data->dim.minIm) * (double)y / (double)SCREEN_HEIGHT + data->dim.minIm);
-	if (button == SCROLL_UP)
+	if (button == SCROLL_UP || button == LEFT_BUTTON)
 		zoom(&(data->dim), (t_point){x, y}, ZOOM_FACTOR);
-	else if (button == SCROLL_DOWN)
+	else if (button == SCROLL_DOWN || button == RIGHT_BUTTON)
 		zoom(&(data->dim), (t_point){x, y}, 1 / ZOOM_FACTOR);
 	else
 		return (0);
@@ -110,7 +110,7 @@ int	main(int argc, char *argv[])
 	data.img.img = mlx_new_image(data.mlx_ptr, SCREEN_WIDTH, SCREEN_HEIGHT);		// Might fail
 	data.img.addr = mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_length,
 								&data.img.endian);
-	ft_printf("bpp %d linlen %d endian %d\n", data.img.bpp, data.img.line_length, data.img.endian);	
+	ft_printf("bpp %d linlen %d endian %d\n", data.img.bpp, data.img.line_length, data.img.endian);
 	render_fractal(&data);
 	mlx_loop_hook(data.mlx_ptr, &render, &data);
 	mlx_key_hook(data.win_ptr, &key_hook, &data);

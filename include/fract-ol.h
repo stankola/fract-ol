@@ -40,6 +40,8 @@
 # endif
 
 enum e_mousecodes {
+	LEFT_BUTTON = 1,
+	RIGHT_BUTTON = 2,
 	SCROLL_UP = 4,
 	SCROLL_DOWN = 5
 };

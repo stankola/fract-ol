@@ -35,7 +35,7 @@ static int	get_inside_color(void)
 	return (BLACK);
 }
 
-// from http://warp.povusers.org/Mandelbrot/
+// adapted from http://warp.povusers.org/Mandelbrot/
 void	render_mandelbrot(t_img *img, t_dim dim, int max_iterations)
 {
 	long double Re_factor = (dim.maxRe - dim.minRe) / (SCREEN_WIDTH - 1);
