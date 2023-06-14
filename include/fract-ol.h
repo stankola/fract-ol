@@ -22,7 +22,7 @@
 # define ZOOM_FACTOR 0.8	// ZOOM_FACTOR should be between ]0, 1[
 # define SHIFT_MULTIPLIER 0.1
 # define MANDELBROT_ITERATIONS 200
-# define JULIA_ITERATIONS 50
+# define JULIA_ITERATIONS 250
 # ifdef __linux__
 #  define ESC 65307
 #  define R 114
@@ -61,6 +61,12 @@ enum e_fractals {
 	JULIA
 };
 
+typedef struct s_cval
+{
+	long double	r;
+	long double	i;
+} t_cval;
+
 typedef struct	s_img
 {
 	void	*img;
@@ -87,6 +93,8 @@ typedef struct s_data
 	t_dim	dim;
 	int		fractal;
 	int		initialize;
+	t_cval	parameter;
+
 } t_data;
 
 typedef struct s_point
@@ -95,11 +103,7 @@ typedef struct s_point
 	int	y;
 } t_point;
 
-typedef struct s_cval	// Consider the necessity of this
-{
-	double	r;
-	double	i;
-} t_cval;
+long double	ft_atof(char *s);
 
 void	zoom(t_dim *dim, t_point center, long double factor);
 
@@ -119,7 +123,7 @@ void	render_mandelbrot(t_img *img, t_dim dim, int max_iterations);
 
 void	get_julia_dimensions(t_dim *dim);
 
-void	render_julia(t_img *img, t_dim dim, int max_iterations);
+void	render_julia(t_img *img, t_dim dim, t_cval k, int max_iterations);
 
 void	render_fractal(t_data *data);
 

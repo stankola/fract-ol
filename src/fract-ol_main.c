@@ -71,7 +71,7 @@ int	parse(int argc, char *argv[])
 	char	*s;
 	int		i;
 
-	if (argc == 2)
+	if (argc >= 2 && argc <= 4)
 	{
 		i = ft_atoi(argv[1]);
 		s = ft_itoa(i);
@@ -85,9 +85,8 @@ int	parse(int argc, char *argv[])
 		}
 	}
 	ft_printf("Please select the fractal to be drawn:\n");
-	ft_printf("\t%d - Mandelbrot\n", MANDELBROT);
-	ft_printf("\t%d - Julia\n", JULIA);
-	ft_printf("e.g. \"./fract-ol %d\"\n", MANDELBROT);
+	ft_printf("\t%d - Mandelbrot eg. \"./fract-ol %d\"\n", MANDELBROT, MANDELBROT);
+	ft_printf("\t%d [K_real] [K_imaginary] - Julia eg. \"./fract-ol %d 0.353 0.288\"\n", JULIA, JULIA);
 	exit(0);
 	return (-1);
 }
@@ -110,6 +109,8 @@ int	main(int argc, char *argv[])
 	data.img.img = mlx_new_image(data.mlx_ptr, SCREEN_WIDTH, SCREEN_HEIGHT);		// Might fail
 	data.img.addr = mlx_get_data_addr(data.img.img, &data.img.bpp, &data.img.line_length,
 								&data.img.endian);
+	if (data.fractal == JULIA)
+		data.parameter = (t_cval){ft_atof(argv[2]), ft_atof(argv[3])};	// TODO ERROR DETECTION
 	ft_printf("bpp %d linlen %d endian %d\n", data.img.bpp, data.img.line_length, data.img.endian);
 	render_fractal(&data);
 	mlx_loop_hook(data.mlx_ptr, &render, &data);

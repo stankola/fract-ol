@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <math.h>
+#include <stdio.h>
 #include "fract-ol.h"
 
 void	get_julia_dimensions(t_dim *dim)
@@ -33,6 +34,7 @@ void	render_julia(t_img *img, t_dim dim, t_cval k, int max_iterations)
 	long double k_re = k.r;
 	int	n;
 
+	printf("rendering julia for K: Re %Lf Im %Lf\n", k.r, k.i);	// stdio
 	for (unsigned y=0; y<SCREEN_HEIGHT; ++y)
 	{
 		long double c_im = dim.maxIm - y * Im_factor;

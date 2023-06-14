@@ -15,6 +15,35 @@
 #include "libft.h"
 #include "fract-ol.h"
 
+long double	ft_atof(char *s)
+{
+	char	*i;
+	int		sign;
+	long double	d;
+	int		j;
+
+	i = s;
+	d = 0;
+	while (ft_isspace(*i))
+		i++;
+	if ((*i >= '0' && *i <= '9') || *i == '+')
+		sign = 1;
+	else if (*i == '-')
+		sign = -1;
+	else
+		exit(22);
+	if (*i == '+' || *i == '-')
+		i++;
+	while (*i != '\0' && *i != '.' && *i >= '0' && *i <= '9')
+		d = 10 * d + (*(i++) - '0');
+	if (*(i++) != '.')
+		return (sign * d);
+	j = 1;
+	while (*i != '\0' && *i >= '0' && *i <= '9')
+		d = d + (long double)(*(i++) - '0') / pow(10, j++);
+	return (sign * d);
+}
+
 // Factor should be between ]0,1[
 // Procedure before compressing it for the Norm (for clarity):
 //	double x_offset = (double)center.x / (double)SCREEN_WIDTH;
