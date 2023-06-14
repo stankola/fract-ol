@@ -72,12 +72,21 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 
 int	parse(int argc, char *argv[])
 {
+	char	*s;
+	int		i;
+
 	if (argc == 2)
 	{
-		if (ft_atoi(argv[1]) == MANDELBROT)	// TODO: this one accepts 0a. Stricter atoi is needed.
-			return (MANDELBROT);
-		else if (ft_atoi(argv[1]) == JULIA)
-			return (JULIA);
+		i = ft_atoi(argv[1]);
+		s = ft_itoa(i);
+		if (s != NULL)
+		{
+			if (ft_strncmp(s, argv[1], ft_strlen(argv[1])) != 0)
+				i = -1;
+			free(s);
+			if (i == MANDELBROT || i == JULIA)
+				return (i);
+		}
 	}
 	ft_printf("Please select the fractal to be drawn:\n");
 	ft_printf("\t%d - Mandelbrot\n", MANDELBROT);
