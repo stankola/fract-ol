@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw.c                                             :+:      :+:    :+:   */
+/*   draw_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsankola <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,7 +9,7 @@
 /*   Updated: 2023/06/12 14:27:16 by tsankola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "fractol.h"
+#include "fractol_bonus.h"
 
 // Might need to reconsider this. If origin is in the center of the screen,
 // negative values should be permitted.

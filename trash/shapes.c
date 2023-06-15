@@ -63,3 +63,20 @@ int	render_square(t_img *img, t_point p, int size, int color)
 	}
 	return (0);
 }
+
+void	render_background(t_img *img, int color)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < SCREEN_HEIGHT)
+	{
+		j = 0;
+		while (j < SCREEN_WIDTH)
+		{
+			draw_pixel(img, (t_point){j++, i}, color);
+		}
+		++i;
+	}
+}

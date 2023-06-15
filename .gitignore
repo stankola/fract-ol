@@ -6,8 +6,12 @@
 !Makefile
 !/src
 !/src/*.c
+!/src_bonus
+!/src_bonus/*.c
 !/include
 !/include/*.h
+!/include_bonus
+!/include_bonus/*.h
 !/doc
 !/doc/*.pdf
 !/doc/*.txt

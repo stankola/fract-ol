@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fractol.h                                          :+:      :+:    :+:   */
+/*   fractol_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsankola <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 12:00:02 by tsankola          #+#    #+#             */
-/*   Updated: 2023/06/01 12:00:02 by tsankola         ###   ########.fr       */
+/*   Updated: 2023/06/15 20:14:41 by tsankola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef FRACTOL_H
-# define FRACTOL_H
+#ifndef FRACTOL_BONUS_H
+# define FRACTOL_BONUS_H
 # define SCREEN_WIDTH 900
 # define SCREEN_HEIGHT 900
 # define TITLE "Fract-ol"
