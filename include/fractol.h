@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fract-ol.h                                         :+:      :+:    :+:   */
+/*   fractol.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsankola <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,8 +9,8 @@
 /*   Updated: 2023/06/01 12:00:02 by tsankola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#ifndef FRACT_OL_H
-# define FRACT_OL_H
+#ifndef FRACTOL_H
+# define FRACTOL_H
 # define SCREEN_WIDTH 900
 # define SCREEN_HEIGHT 900
 # define TITLE "Fract-ol"
@@ -22,7 +22,7 @@
 # define ZOOM_FACTOR 0.8	// ZOOM_FACTOR should be between ]0, 1[
 # define SHIFT_MULTIPLIER 0.1
 # define MANDELBROT_ITERATIONS 50
-# define JULIA_ITERATIONS 500
+# define JULIA_ITERATIONS 50
 # ifdef __linux__
 #  define ESC 65307
 #  define R 114
@@ -61,76 +61,87 @@ enum e_fractals {
 	JULIA
 };
 
-typedef struct s_cval
+typedef struct s_complex
 {
 	long double	r;
 	long double	i;
-} t_cval;
+}	t_complex;
 
-typedef struct	s_img
+typedef struct s_img
 {
 	void	*img;
 	char	*addr;
 	int		bpp;
 	int		line_length;
 	int		endian;
-} t_img;
+}	t_img;
 
 typedef struct s_dim
 {
-	long double	minRe;
-	long double	maxRe;
-	long double	minIm;
-	long double	maxIm;
-} t_dim;
+	long double	min_r;
+	long double	max_r;
+	long double	min_i;
+	long double	max_i;
+}	t_dim;
 
 typedef struct s_data
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-	t_img	img;
-	int		cur_img;
-	t_dim	dim;
-	int		fractal;
-	int		initialize;
-	t_cval	parameter;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	t_img		img;
+	int			cur_img;
+	t_dim		dim;
+	int			fractal;
+	int			initialize;
+	t_complex	parameter;
 
-} t_data;
+}	t_data;
 
 typedef struct s_point
 {
 	int	x;
 	int	y;
-} t_point;
+}	t_point;
+
+int			render(t_data *data);
+
+int			destroy(t_data *data);
+
+int			key_hook(int keycode, t_data *data);
+
+int			mouse_hook(int button, int x, int y, t_data *data);
 
 long double	ft_atof(char *s);
 
-void	zoom(t_dim *dim, t_point center, long double factor);
+int			check_float_form(char *s);
 
-void	shift(t_dim *dim, int direction, double distance_multiplier);
+void		zoom(t_dim *dim, t_point center, long double factor);
 
-int		check_bounds(t_point p);
+void		shift(t_dim *dim, int direction, double distance_multiplier);
 
-int		invert_int_by_bytes(int i, unsigned int byteamount);
+int			check_bounds(t_point p);
 
-void	draw_pixel(t_img *img, t_point p, int color);
+int			invert_int_by_bytes(int i, unsigned int byteamount);
 
-void	render_background(t_img *img, int color);
+void		draw_pixel(t_img *img, t_point p, int color);
 
-void	get_mandelbrot_dimensions(t_dim *dim);
+void		render_background(t_img *img, int color);
 
-void	render_mandelbrot(t_img *img, t_dim dim, int max_iterations);
+void		get_mandelbrot_dimensions(t_dim *dim);
 
-void	get_julia_dimensions(t_dim *dim);
+void		render_mandelbrot(t_img *img, t_dim dim, int max_iterations);
 
-void	render_julia(t_img *img, t_dim dim, t_cval k, int max_iterations);
+void		get_julia_dimensions(t_dim *dim);
 
-void	render_fractal(t_data *data);
+void		render_julia(t_img *img, t_dim dim, t_complex k,
+				int max_iterations);
+
+void		render_fractal(t_data *data);
 
 /* These are not required for fract-ol */
 
-int render_circle(t_img *img, t_point p, int radius, int color);
+int			render_circle(t_img *img, t_point p, int radius, int color);
 
-int render_square(t_img *img, t_point p, int size, int color);
+int			render_square(t_img *img, t_point p, int size, int color);
 
 #endif

@@ -10,9 +10,9 @@
 #                                                                              #
 #******************************************************************************#
 
-NAME = fract-ol
+NAME = fractol
 
-NAME_BONUS = fract-ol
+NAME_BONUS = fractol
 
 CC = cc
 
@@ -33,7 +33,8 @@ OS := $(shell uname)
 ifeq "$(OS)" "Linux"
 MINILIB_DIR := minilibx-linux
 else ifeq "$(OS)" "Darwin"
-MINILIB_DIR := minilibx_mms_20191025_beta
+#MINILIB_DIR := minilibx_mms_20191025_beta
+MINILIB_DIR := /usr/local/include
 endif
 
 ifeq "$(OS)" "Linux"
@@ -42,11 +43,16 @@ else ifeq "$(OS)" "Darwin"
 MINILIB_SRC := minilibx_mms_beta.tgz
 endif
 
+ifeq "$(OS)" "Linux"
 MINILIB_INCDIR = $(patsubst %, $(LIB_DIR)/%, $(MINILIB_DIR))
+else ifeq "$(OS)" "Darwin"
+MINILIB_INCDIR = MINILIB_DIR
+endif
 
 LIB_INCDIR = $(LIB_DIR)/$(INCDIR)
 
-_SRC = fract-ol_main.c fract-ol_helpers.c draw.c shapes.c mandelbrot.c julia.c
+_SRC =	fractol_main.c fractol_helpers.c draw.c shapes.c mandelbrot.c julia.c \
+		hooks_n_things.c
 SRC = $(patsubst %, $(SRCDIR)/%, $(_SRC))
 
 _OBJ = $(patsubst %.c, %.o, $(_SRC))
@@ -62,7 +68,7 @@ _LIB = libft.a
 LIB = $(patsubst %, $(LIB_DIR)/%, $(_LIB))
 LIB_NAME = $(patsubst lib%.a, %, $(_LIB))
 
-_INC = fract-ol.h
+_INC = fractol.h
 INC = $(patsubst %, $(INCDIR)/%, $(_INC))
 
 #_INC_BONUS = 

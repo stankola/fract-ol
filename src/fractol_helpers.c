@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fract-ol_helpers.c                                 :+:      :+:    :+:   */
+/*   fractol_helpers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tsankola <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,26 +13,49 @@
 #include <string.h>
 #include <math.h>
 #include "libft.h"
-#include "fract-ol.h"
+#include "fractol.h"
 
+// Acceptable values are of type [+/-]123.123 or [+/-].123
+int	check_float_form(char *s)
+{
+	if (*s == '\0')
+		return (0);
+	if (*s == '+' || *s == '-')
+		s++;
+	if (*s == '\0')
+		return (0);
+	while (*s >= '0' && *s <= '9')
+		s++;
+	if (*s == '\0')
+		return (1);
+	if (*s == '.')
+		s++;
+	if (*s == '\0')
+		return (0);
+	if (*s >= '0' && *s <= '9')
+		s++;
+	while (*s >= '0' && *s <= '9')
+		s++;
+	if (*s == '\0')
+		return (1);
+	return (0);
+}
+
+// Might overflow. No good way to detect this. We assume that form has been
+// checked.
 long double	ft_atof(char *s)
 {
-	char	*i;
-	int		sign;
+	char		*i;
+	int			sign;
 	long double	d;
-	int		j;
+	int			j;
 
 	i = s;
 	d = 0;
-	while (ft_isspace(*i))
-		i++;
-	if ((*i >= '0' && *i <= '9') || *i == '+')
-		sign = 1;
-	else if (*i == '-')
+	sign = 1;
+	if (*i == '-')
 		sign = -1;
-	else
-		exit(22);
-	if (*i == '+' || *i == '-')
+	if (*i == '-' || *i == '+')
 		i++;
 	while (*i != '\0' && *i != '.' && *i >= '0' && *i <= '9')
 		d = 10 * d + (*(i++) - '0');
@@ -59,17 +82,16 @@ void	zoom(t_dim *dim, t_point center, long double factor)
 	double	height;
 	double	new_height;
 
-	width = dim->maxRe - dim->minRe;
+	width = dim->max_r - dim->min_r;
 	new_width = width * factor;
-	dim->minRe = (width - new_width) *
-		(double)center.x / (double)SCREEN_WIDTH + dim->minRe;
-	dim->maxRe = dim->minRe + new_width;
-
-	height = dim->maxIm - dim->minIm;
+	dim->min_r = (width - new_width)
+		* (double)center.x / (double)SCREEN_WIDTH + dim->min_r;
+	dim->max_r = dim->min_r + new_width;
+	height = dim->max_i - dim->min_i;
 	new_height = height * factor;
-	dim->minIm = (height - new_height) *
-		(1 - (double)center.y / (double)SCREEN_HEIGHT) + dim->minIm;
-	dim->maxIm = dim->minIm + new_height;
+	dim->min_i = (height - new_height)
+		* (1 - (double)center.y / (double)SCREEN_HEIGHT) + dim->min_i;
+	dim->max_i = dim->min_i + new_height;
 }
 
 void	shift(t_dim *dim, int direction, double distance_multiplier)
@@ -80,28 +102,19 @@ void	shift(t_dim *dim, int direction, double distance_multiplier)
 		distance_multiplier *= -1;
 	if (direction == UP_ARROW || direction == DOWN_ARROW)
 	{
-		length = dim->maxIm - dim->minIm;
-		dim->maxIm += length * distance_multiplier;
-		dim->minIm += length * distance_multiplier;;
+		length = dim->max_i - dim->min_i;
+		dim->max_i += length * distance_multiplier;
+		dim->min_i += length * distance_multiplier;
 		return ;
 	}
 	if (direction == LEFT_ARROW)
 		distance_multiplier *= -1;
 	if (direction == RIGHT_ARROW || direction == LEFT_ARROW)
 	{
-		length = dim->maxRe - dim->minRe;
-		dim->maxRe += length * distance_multiplier;
-		dim->minRe += length * distance_multiplier;
+		length = dim->max_r - dim->min_r;
+		dim->max_r += length * distance_multiplier;
+		dim->min_r += length * distance_multiplier;
 	}
-}
-
-// Might need to reconsider this. If origin is in the center of the screen,
-// negative values should be permitted.
-int	check_bounds(t_point p)
-{
-	if (p.x < 0 || p.y < 0 || p.x > SCREEN_WIDTH || p.y > SCREEN_HEIGHT)
-		return (0);
-	return (1);
 }
 
 int	invert_int_by_bytes(int i, unsigned int byteamount)

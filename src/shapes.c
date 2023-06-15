@@ -9,28 +9,28 @@
 /*   Updated: 2023/06/12 14:27:26 by tsankola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "fract-ol.h"
 #include <math.h>
+#include "fractol.h"
 
-void	render_fractal(t_data *data)
+void	render_fractal(t_data *d)
 {
-	if (data->fractal == MANDELBROT)
+	if (d->fractal == MANDELBROT)
 	{
-		if (data->initialize)
-			get_mandelbrot_dimensions(&(data->dim));
-		render_mandelbrot(&(data->img), data->dim, MANDELBROT_ITERATIONS);
+		if (d->initialize)
+			get_mandelbrot_dimensions(&(d->dim));
+		render_mandelbrot(&(d->img), d->dim, MANDELBROT_ITERATIONS);
 	}
-	else if (data->fractal == JULIA)
+	else if (d->fractal == JULIA)
 	{
-		if (data->initialize)
-			get_julia_dimensions(&(data->dim));
-		render_julia(&(data->img), data->dim, data->parameter, JULIA_ITERATIONS);
+		if (d->initialize)
+			get_julia_dimensions(&(d->dim));
+		render_julia(&(d->img), d->dim, d->parameter, JULIA_ITERATIONS);
 	}
-	data->initialize = 0;
+	d->initialize = 0;
 }
 
 // Draws a circle centered at x,y with radius
-int render_circle(t_img *img, t_point p, int radius, int color)
+int	render_circle(t_img *img, t_point p, int radius, int color)
 {
 	int		x;
 	int		y;
@@ -48,10 +48,10 @@ int render_circle(t_img *img, t_point p, int radius, int color)
 	return (0);
 }
 
-int render_square(t_img *img, t_point p, int size, int color)
+int	render_square(t_img *img, t_point p, int size, int color)
 {
 	int	i;
-	int j;
+	int	j;
 
 	i = p.x;
 	while (i < p.y + size)

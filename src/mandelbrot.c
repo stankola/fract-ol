@@ -11,15 +11,15 @@
 /* ************************************************************************** */
 #include <stdlib.h>
 #include <math.h>
-#include "fract-ol.h"
+#include "fractol.h"
 
 void	get_mandelbrot_dimensions(t_dim *dim)
 {
-	dim->minRe = -2.0;
-	dim->maxRe = 1.0;
-	dim->minIm = -1.2;
-	dim->maxIm = dim->minIm +
-		(dim->maxRe - dim->minRe) * SCREEN_HEIGHT / SCREEN_WIDTH;
+	dim->min_r = -2.0;
+	dim->max_r = 1.0;
+	dim->min_i = -1.2;
+	dim->max_i = dim->min_i
+		+ (dim->max_r - dim->min_r) * SCREEN_HEIGHT / SCREEN_WIDTH;
 }
 
 static int	get_outside_color(int iterations, int max_iterations)
@@ -35,38 +35,45 @@ static int	get_inside_color(void)
 	return (BLACK);
 }
 
+static int	iterate(t_complex z, t_complex c, int max_iterations)
+{
+	int			n;
+	t_complex	z2;
+
+	n = -1;
+	while (++n < max_iterations)
+	{
+		z2.r = z.r * z.r;
+		z2.i = z.i * z.i;
+		if (z2.r + z2.i > 4)
+			break ;
+		z.i = 2 * z.r * z.i + c.i;
+		z.r = z2.r - z2.i + c.r;
+	}
+	return (n);
+}
+
 // adapted from http://warp.povusers.org/Mandelbrot/
 void	render_mandelbrot(t_img *img, t_dim dim, int max_iterations)
 {
-	long double Re_factor = (dim.maxRe - dim.minRe) / (SCREEN_WIDTH - 1);
-	long double Im_factor = (dim.maxIm - dim.minIm) / (SCREEN_HEIGHT - 1);
-	int	n;
+	int			n;
+	int			y;
+	int			x;
+	t_complex	c;
 
-	for (unsigned y=0; y<SCREEN_HEIGHT; ++y)
+	y = -1;
+	while (++y < SCREEN_HEIGHT)
 	{
-		long double c_im = dim.maxIm - y * Im_factor;
-		for (unsigned x = 0; x < SCREEN_WIDTH; ++x)
+		c.i = dim.max_i - y * (dim.max_i - dim.min_i) / (SCREEN_HEIGHT - 1);
+		x = -1;
+		while (++x < SCREEN_WIDTH)
 		{
-			long double c_re = dim.minRe + x * Re_factor;
-
-			long double Z_im = c_im;
-			long double Z_re = c_re;
-			int isInside = 1;
-			n = -1;
-			while (++n < max_iterations)
-			{
-				long double Z_re2 = Z_re * Z_re;
-				long double Z_im2 = Z_im * Z_im;
-				if (Z_re2 + Z_im2 > 4)
-				{
-					isInside = 0;
-					draw_pixel(img, (t_point){x, y}, get_outside_color(n, max_iterations));
-					break;
-				}
-				Z_im = 2 * Z_re * Z_im + c_im;
-				Z_re = Z_re2 - Z_im2 + c_re;
-			}
-			if (isInside)
+			c.r = dim.min_r + x * (dim.max_r - dim.min_r) / (SCREEN_WIDTH - 1);
+			n = iterate((t_complex){c.r, c.i}, c, max_iterations);
+			if (n < max_iterations)
+				draw_pixel(img, (t_point){x, y},
+					get_outside_color(n, max_iterations));
+			else
 				draw_pixel(img, (t_point){x, y}, get_inside_color());
 		}
 	}
